@@ -2,8 +2,9 @@ name: Compilar APK de Android
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,8 +13,6 @@ jobs:
     steps:
       - name: Descargar Código
         uses: actions/checkout@v4
-        with:
-          submodules: true
 
       - name: Configurar Java 17
         uses: actions/setup-java@v4
@@ -21,21 +20,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Configurar Gradle 8.2
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.2'
+
       - name: Aceptar licencias e instalar NDK y CMake
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
-
-      - name: Otorgar permisos a Gradle
-        run: chmod +x gradlew || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;25.2.9519653" "cmake;3.22.1"
 
       - name: Compilar APK
-        run: |
-          if [ -f "./gradlew" ]; then
-            ./gradlew assembleDebug
-          else
-            gradle assembleDebug
-          fi
+        run: gradle assembleDebug
 
       - name: Subir APK Generado
         uses: actions/upload-artifact@v4
