@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Descargar Código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -40,7 +40,7 @@ jobs:
           fi
 
       - name: Subir APK Generado
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NFSHS-Android-APK
           path: app/build/outputs/apk/debug/app-debug.apk
