@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.psxports.nfshs'
     compileSdkVersion 34
+
     defaultConfig {
         applicationId "com.psxports.nfshs"
         minSdkVersion 24
