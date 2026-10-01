@@ -1,12 +1,16 @@
 package com.psxports.nfshs;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import org.libsdl.app.SDLActivity;
 import java.io.*;
 
-public class MainActivity extends SDLActivity {
+public class MainActivity extends Activity {
+
+    static {
+        System.loadLibrary("SDL2");
+        System.loadLibrary("main");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +19,9 @@ public class MainActivity extends SDLActivity {
     }
 
     private void copyAssetsToInternalStorage() {
-        Context context = getContext() != null ? getContext() : getApplicationContext();
-        if (context != null) {
-            File internalDir = context.getFilesDir();
-            copyAssetFolder(context.getAssets(), "", internalDir.getAbsolutePath());
+        File internalDir = getFilesDir();
+        if (internalDir != null) {
+            copyAssetFolder(getAssets(), "", internalDir.getAbsolutePath());
         }
     }
 
@@ -61,12 +64,5 @@ public class MainActivity extends SDLActivity {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    protected String[] getLibraries() {
-        return new String[] {
-            "SDL2",
-            "main"
-        };
     }
 }
